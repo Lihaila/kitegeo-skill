@@ -55,6 +55,14 @@ Payment always happens on the website through Stripe. It needs an agent with net
 /plugin install kitegeo@kitegeo
 ```
 
+This installs both skills. Or copy one in by hand:
+
+```bash
+git clone https://github.com/Lihaila/kitegeo-skill
+cp -r kitegeo-skill/skills/kitegeo ~/.claude/skills/        # free audit
+cp -r kitegeo-skill/skills/kitegeo-pro ~/.claude/skills/    # KiteGEO account
+```
+
 **Updating in Claude Code:** plugins don't update on their own. To get the latest version:
 
 ```
@@ -63,14 +71,6 @@ Payment always happens on the website through Stripe. It needs an agent with net
 ```
 
 Then restart Claude Code.
-
-This installs both skills. Or copy one in by hand:
-
-```bash
-git clone https://github.com/Lihaila/kitegeo-skill
-cp -r kitegeo-skill/skills/kitegeo ~/.claude/skills/        # free audit
-cp -r kitegeo-skill/skills/kitegeo-pro ~/.claude/skills/    # KiteGEO account
-```
 
 **Any other agent that supports SKILL.md skills** (Codex, Cursor, Gemini CLI and others): copy the skill folder from `skills/` into that agent's skills directory (see its docs for the location). The scripts are plain Node with no dependencies, so nothing else is needed. We built and tested these with Claude Code.
 
