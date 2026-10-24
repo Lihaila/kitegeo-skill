@@ -1,0 +1,10 @@
+{
+  "name": "kitegeo",
+  "version": "1.0.0",
+  "description": "Check and fix how AI assistants (ChatGPT, Claude, Gemini, Perplexity, Grok) see your brand. kitegeo: free, local AI-readiness audit with ready-to-paste fixes. kitegeo-pro: runs KiteGEO (lihaila.com/geo) on your account for AI-visibility checks, Full Reports, action plans and weekly tracking.",
+  "author": { "name": "Lihai La", "url": "https://lihaila.com" },
+  "homepage": "https://lihaila.com/geo/",
+  "repository": "https://github.com/Lihaila/kitegeo-skill",
+  "license": "MIT",
+  "keywords": ["geo", "generative-engine-optimization", "ai-seo", "llms-txt", "schema", "ai-visibility"]
+}

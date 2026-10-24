@@ -1,0 +1,12 @@
+{
+  "name": "kitegeo",
+  "description": "KiteGEO: GEO (generative engine optimization) skills for Claude, from lihaila.com/geo.",
+  "owner": { "name": "Lihai La", "url": "https://lihaila.com" },
+  "plugins": [
+    {
+      "name": "kitegeo",
+      "source": "./",
+      "description": "Check and fix how AI assistants see your brand: a free AI-readiness audit, plus KiteGEO checks and reports on your account."
+    }
+  ]
+}
