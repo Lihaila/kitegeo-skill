@@ -1,6 +1,6 @@
 ---
 name: kitegeo-pro
-description: Run KiteGEO (lihaila.com/geo) from Claude. It checks whether ChatGPT, Gemini, Perplexity, Claude and Grok recommend a brand when buyers ask, which competitors they name instead, how they describe it, and what to fix. It runs free checks, reads Full Reports and action plans the user has bought, and tracks brands weekly, all on the user's KiteGEO account through an API key. Use it whenever the user has a KiteGEO account or key, mentions KiteGEO Pro, or asks whether AI assistants recommend their brand, their AI visibility or share of voice, or for a GEO report, even if they don't say "KiteGEO".
+description: Run KiteGEO (lihaila.com/geo) from your AI agent. It checks whether ChatGPT, Gemini, Perplexity, Claude and Grok recommend a brand when buyers ask, which competitors they name instead, how they describe it, and what to fix. It runs free checks, reads Full Reports and action plans the user has bought, and tracks brands weekly, all on the user's KiteGEO account through an API key. Use it whenever the user has a KiteGEO account or key, mentions KiteGEO Pro, or asks whether AI assistants recommend their brand, their AI visibility or share of voice, or for a GEO report, even if they don't say "KiteGEO".
 ---
 
 # KiteGEO Pro
@@ -11,7 +11,7 @@ Everything goes through `scripts/kitegeo.mjs` (Node 18+, no dependencies). It pr
 
 ## Accounts, plans and keys
 
-- **Key:** the user signs in at lihaila.com/geo (Google or email) and creates a key under **Dashboard → Use KiteGEO in Claude**.
+- **Key:** the user signs in at lihaila.com/geo (Google or email) and creates a key under **Dashboard → Use KiteGEO in AI agents**.
 - **Free check:** 5 questions × every assistant, from model memory. Limited to a few a day per person. It shows the score, the top 3 competitors and one sample question. The rest stays locked.
 - **Full Report** ($29, one-time, per brand): 20 questions × every assistant, from memory **and** live web search. It includes every answer, all competitors and cited sources, plus an **action plan** with ready-to-paste llms.txt, JSON-LD, robots.txt, FAQ copy, an About paragraph, content briefs and corrections. It's bought on the report's web page.
 - **Pro ($49/month) and Agency ($199/month):** weekly tracking of 1 or 10 brands, with a full report every scan.
@@ -23,7 +23,7 @@ Run `me`. If it exits with code 2, the JSON's `action` says what the user has to
 
 | action | Tell the user |
 |---|---|
-| `create_key` | Sign in at lihaila.com/geo → Dashboard → **Use KiteGEO in Claude** → **Create a key**, and paste it here. Then run `login <key>`, which saves it to `~/.config/kitegeo/key`, readable only by them. |
+| `create_key` | Sign in at lihaila.com/geo → Dashboard → **Use KiteGEO in AI agents** → **Create a key**, and paste it here. Then run `login <key>`, which saves it to `~/.config/kitegeo/key`, readable only by them. |
 | `quota` | Today's free checks are used up. A Full Report or Pro has no daily limit (pricing link in the message). |
 | `buy_report` | The action plan, the full answers and all competitors come with the Full Report. Buy it on the report page (link in the message). |
 | `upgrade` | Weekly tracking needs the Pro or Agency plan (pricing link in the message). |

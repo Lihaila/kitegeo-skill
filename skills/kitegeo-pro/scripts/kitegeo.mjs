@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // KiteGEO API client for the KiteGEO Pro skill. No dependencies; Node 18+.
 //
-//   node kitegeo.mjs login <key>            save the API key (lihaila.com/geo → Dashboard → Use KiteGEO in Claude)
+//   node kitegeo.mjs login <key>            save the API key (lihaila.com/geo → Dashboard → Use KiteGEO in AI agents)
 //   node kitegeo.mjs me                     account, plan, reports and tracked brands
 //   node kitegeo.mjs prepare --site <url or brand> [--keywords "…"] [--lang en|cn|jp|kr]
 //                                           read the site; returns the brand profile, competitors and proposed buyer questions
@@ -21,7 +21,7 @@ import path from 'node:path';
 
 const BASE = (process.env.KITEGEO_URL || 'https://lihaila.com/geo').replace(/\/+$/, '');
 const KEY_FILE = path.join(os.homedir(), '.config', 'kitegeo', 'key');
-const DASH = `${BASE}/en/dashboard (sign in → Use KiteGEO in Claude → Create a key)`;
+const DASH = `${BASE}/en/dashboard (sign in → Use KiteGEO in AI agents → Create a key)`;
 const PRICING = `${BASE}/en/pricing`;
 const reportUrl = (id) => `${BASE}/en/r/${id}`;
 
