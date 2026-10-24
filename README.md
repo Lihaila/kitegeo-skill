@@ -41,7 +41,7 @@ Runs the real KiteGEO from your agent. It asks every assistant real buyer questi
 
 **What it can do:**
 - **Free checks:** 5 questions × every assistant, a few per day.
-- **Full Report** ($29 one-time, bought on the report's web page): 20 questions, memory and live search, every answer, all competitors, cited sources and an action plan with ready-to-paste fixes. The skill can fetch and apply that plan.
+- **Full Report** (one-time, bought on the report's web page; see [pricing](https://lihaila.com/geo/en/pricing)): 20 questions, memory and live search, every answer, all competitors, cited sources and an action plan with ready-to-paste fixes. The skill can fetch and apply that plan.
 - **Pro and Agency:** weekly tracking with a score trend.
 
 Payment always happens on the website through Stripe. It needs an agent with network access; the claude.ai sandbox may block calls to outside servers.
