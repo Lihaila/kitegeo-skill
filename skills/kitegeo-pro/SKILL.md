@@ -1,6 +1,6 @@
 ---
 name: kitegeo-pro
-description: Run KiteGEO (lihaila.com/geo) from your AI agent. It checks whether ChatGPT, Gemini, Perplexity, Claude and Grok recommend a brand when buyers ask, which competitors they name instead, how they describe it, and what to fix. It runs free checks, reads Full Reports and action plans the user has bought, and tracks brands weekly, all on the user's KiteGEO account through an API key. Use it whenever the user has a KiteGEO account or key, mentions KiteGEO Pro, or asks whether AI assistants recommend their brand, their AI visibility or share of voice, or for a GEO report, even if they don't say "KiteGEO".
+description: Run KiteGEO (lihaila.com/geo) from your AI agent. It checks whether AI assistants (ChatGPT and Grok; DeepSeek and Qwen for Chinese) recommend a brand when buyers ask, which competitors they name instead, how they describe it, and what to fix. It runs free checks, reads Full Reports and action plans the user has bought, and tracks brands weekly, all on the user's KiteGEO account through an API key. Use it whenever the user has a KiteGEO account or key, mentions KiteGEO Pro, or asks whether AI assistants recommend their brand, their AI visibility or share of voice, or for a GEO report, even if they don't say "KiteGEO".
 ---
 
 # KiteGEO Pro

@@ -8,7 +8,7 @@ Two skills for Claude Code, Codex, Cursor, Gemini CLI or any agent that supports
 |---|---|---|
 | AI-readiness audit (can AI crawlers read your site?) | ✓ 11 checks, scored out of 100 | ✓ part of every report |
 | Ready-to-paste fixes: robots.txt, llms.txt, JSON-LD, FAQ, meta | ✓ written by your agent from your page | ✓ in the Full Report's action plan |
-| What ChatGPT, Gemini, Perplexity, Claude and Grok actually say about you | – | ✓ graded answers, mention rate, share of voice |
+| What AI assistants actually say about you (ChatGPT and Grok; DeepSeek and Qwen for Chinese) | – | ✓ graded answers, mention rate, share of voice |
 | Competitors the AIs name instead, sources they cite | – | ✓ |
 | Weekly tracking | – | ✓ Pro and Agency plans |
 | Cost | Free, runs on your machine | Free to install; uses your KiteGEO account (free checks, then a Full Report or plan) |
