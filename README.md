@@ -55,6 +55,15 @@ Payment always happens on the website through Stripe. It needs an agent with net
 /plugin install kitegeo@kitegeo
 ```
 
+**Updating in Claude Code:** plugins don't update on their own. To get the latest version:
+
+```
+/plugin marketplace update kitegeo
+/plugin update kitegeo@kitegeo
+```
+
+Then restart Claude Code.
+
 This installs both skills. Or copy one in by hand:
 
 ```bash
