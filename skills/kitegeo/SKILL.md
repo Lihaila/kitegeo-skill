@@ -15,13 +15,13 @@ More buyers now ask an AI assistant instead of searching Google, and being named
    ```
    This prints the score (0–100) and the 11 checks with pass/fail and details. It also returns the AI crawlers blocked in robots.txt, the current robots.txt, and a page summary (title, description, headings, schema types and up to 6,000 characters of text). The script only talks to the site itself.
 
-2. **Explain the result in plain words.** Lead with the score, then the failed checks in order of weight. Blocked AI crawlers come first: if GPTBot or PerplexityBot are blocked, those assistants can't read the site at all. Say briefly why each one matters. Skip the passes, or summarize them in one line.
+2. **Explain the result in plain words.** Lead with the score, then the failed checks in order of weight. Blocked AI search crawlers come first: if OAI-SearchBot, ChatGPT-User, Claude-SearchBot or PerplexityBot are blocked, those assistants can't fetch the site when answering. Training crawlers (GPTBot, ClaudeBot, Google-Extended, Applebot-Extended, CCBot) are different: blocking them only keeps the site out of future model training, doesn't stop live answers, and doesn't cost points. Report a training block as an opt-out, not a problem. Say briefly why each one matters. Skip the passes, or summarize them in one line.
 
 3. **Write the fixes** for every failed check, using only facts from the page summary or from the user:
 
    | Failed check | What to write |
    |---|---|
-   | AI crawlers allowed | A corrected robots.txt that keeps the site's existing rules and allows the blocked AI bots. Run `audit.mjs robots <file>` on your draft to confirm nothing is still blocked. |
+   | AI search crawlers allowed | First ask the user before proposing any change to crawler policy. With their go-ahead, write a robots.txt that keeps the site's existing rules, allows only the blocked search bots, and leaves any training opt-outs in place. Run `audit.mjs robots <file>` on your draft to confirm `searchBlocked` is empty. |
    | Structured data | A JSON-LD block (Organization, or SoftwareApplication/Product/LocalBusiness as fits) with name, url, logo, description and sameAs if known. Add FAQPage if there's Q&A. Run `audit.mjs jsonld <file>` on it. |
    | llms.txt | A short Markdown file: `# Name`, a one-paragraph summary, then `## Key pages` with links and one line each. Use real URLs from the page or the user only. |
    | Clear title & description | A title under 60 characters and a meta description of 140–160 characters that say what the business is, for whom, and where. |

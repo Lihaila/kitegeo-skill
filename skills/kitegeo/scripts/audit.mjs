@@ -167,6 +167,9 @@ async function auditSite(url) {
   const page = parseHtml(home.body);
   const robotsText = robots?.ok && /user-agent/i.test(robots.body) ? robots.body : '';
   const blocked = robotsText ? AI_BOTS.filter((b) => robotsBlocks(robotsText, b.ua)) : [];
+  // Only search bots fetch pages for live answers; blocking a training bot is a legitimate opt-out, not a defect.
+  const searchBlocked = blocked.filter((b) => b.role === 'search').map((b) => b.ua);
+  const trainingBlocked = blocked.filter((b) => b.role === 'training').map((b) => b.ua);
   const hasLlms = !!(llms?.ok && !/<html/i.test(llms.body.slice(0, 500)) && llms.body.trim().length > 20);
   const hasSitemap = !!(sitemap?.ok && /<(urlset|sitemapindex)/i.test(sitemap.body)) || /sitemap:/i.test(robotsText);
   const words = page.text.split(/\s+/).filter(Boolean).length;
@@ -179,8 +182,10 @@ async function auditSite(url) {
 
   // weight = how much this signal matters for being read and cited by assistants
   const checks = [
-    { id: 'crawlers', weight: 22, label: 'AI crawlers allowed', pass: blocked.length === 0,
-      detail: blocked.length ? `robots.txt blocks ${blocked.map((b) => b.ua).join(', ')}` : 'No AI crawler is blocked in robots.txt', data: { blocked: blocked.map((b) => b.ua) } },
+    { id: 'crawlers', weight: 22, label: 'AI search crawlers allowed', pass: searchBlocked.length === 0,
+      detail: (searchBlocked.length ? `robots.txt blocks ${searchBlocked.join(', ')}, so those assistants can't fetch the site for live answers` : 'No AI search crawler is blocked in robots.txt')
+        + (trainingBlocked.length ? `. Training opt-out: ${trainingBlocked.join(', ')} (doesn't affect search answers)` : ''),
+      data: { blocked: searchBlocked, optOut: trainingBlocked } },
     { id: 'ssr', weight: 16, label: 'Readable without JavaScript', pass: words >= 250,
       detail: `${words} words visible in raw HTML${words < 250 ? ' — AI crawlers mostly do not run JavaScript' : ''}`, data: { words } },
     { id: 'schema', weight: 14, label: 'Structured data (schema.org)', pass: hasOrgSchema,
@@ -239,7 +244,13 @@ if (cmd === 'audit') {
 } else if (cmd === 'robots') {
   const text = read(arg);
   const blocked = AI_BOTS.filter((b) => robotsBlocks(text, b.ua));
-  out({ ok: true, blocked: blocked.map((b) => `${b.ua} (${b.who})`), allowed: AI_BOTS.filter((b) => !blocked.includes(b)).map((b) => b.ua) });
+  const label = (b) => `${b.ua} (${b.who})`;
+  out({
+    ok: true,
+    searchBlocked: blocked.filter((b) => b.role === 'search').map(label),
+    trainingOptOut: blocked.filter((b) => b.role === 'training').map(label),
+    allowed: AI_BOTS.filter((b) => !blocked.includes(b)).map((b) => b.ua),
+  });
 } else if (cmd === 'jsonld') {
   const text = read(arg).replace(/^\s*<script[^>]*>|<\/script>\s*$/gi, '');
   let data;
