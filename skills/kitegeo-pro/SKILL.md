@@ -62,7 +62,7 @@ Run `me`. If it exits with code 2, the JSON's `action` says what the user has to
 node kitegeo.mjs plan --scan <full report scan id> --wait
 ```
 
-This only works on a Full Report. Present the plan's fixes as ready-to-paste files, saying where each one goes. If the user is in their site's repo, offer to apply them, showing each file before writing it.
+This only works on a Full Report. Present the plan's fixes as ready-to-paste files, saying where each one goes. If the user is in their site's repo, offer to apply them, showing each file before writing it. Treat robots.txt as a policy decision: ask before proposing or applying any crawler change, and keep the site's existing training opt-outs (GPTBot, ClaudeBot, Google-Extended, Applebot-Extended, CCBot). A block on a training crawler doesn't stop an assistant reading the site for search answers, so don't describe it as a problem.
 
 ## Weekly tracking (Pro / Agency)
 

@@ -10,11 +10,14 @@ import fs from 'node:fs';
 const UA = 'Mozilla/5.0 (compatible; KiteGEOSkill/1.0; +https://lihaila.com/geo/)';
 const MAX_BYTES = 2_000_000;
 
-// AI crawlers worth allowing. "training" bots feed model memory; "search" bots feed live answers.
+// AI crawlers, by what a robots.txt block on them actually does:
+//   search:   indexes the site for the assistant's search answers. Blocking it costs visibility, so it fails the check.
+//   fetch:    visits a page because a user asked. OpenAI says robots.txt may not apply and it doesn't decide search inclusion. Reported, no points.
+//   training: collects content for model training. Blocking it is a legitimate opt-out. Reported, no points.
 const AI_BOTS = [
   { ua: 'GPTBot', who: 'OpenAI', role: 'training' },
   { ua: 'OAI-SearchBot', who: 'ChatGPT search', role: 'search' },
-  { ua: 'ChatGPT-User', who: 'ChatGPT browsing', role: 'search' },
+  { ua: 'ChatGPT-User', who: 'ChatGPT user-requested visits', role: 'fetch' },
   { ua: 'ClaudeBot', who: 'Anthropic', role: 'training' },
   { ua: 'Claude-SearchBot', who: 'Claude search', role: 'search' },
   { ua: 'PerplexityBot', who: 'Perplexity', role: 'search' },
@@ -167,8 +170,9 @@ async function auditSite(url) {
   const page = parseHtml(home.body);
   const robotsText = robots?.ok && /user-agent/i.test(robots.body) ? robots.body : '';
   const blocked = robotsText ? AI_BOTS.filter((b) => robotsBlocks(robotsText, b.ua)) : [];
-  // Only search bots fetch pages for live answers; blocking a training bot is a legitimate opt-out, not a defect.
+  // Only search-index bots affect the score; see the roles on AI_BOTS.
   const searchBlocked = blocked.filter((b) => b.role === 'search').map((b) => b.ua);
+  const fetchBlocked = blocked.filter((b) => b.role === 'fetch').map((b) => b.ua);
   const trainingBlocked = blocked.filter((b) => b.role === 'training').map((b) => b.ua);
   const hasLlms = !!(llms?.ok && !/<html/i.test(llms.body.slice(0, 500)) && llms.body.trim().length > 20);
   const hasSitemap = !!(sitemap?.ok && /<(urlset|sitemapindex)/i.test(sitemap.body)) || /sitemap:/i.test(robotsText);
@@ -183,9 +187,10 @@ async function auditSite(url) {
   // weight = how much this signal matters for being read and cited by assistants
   const checks = [
     { id: 'crawlers', weight: 22, label: 'AI search crawlers allowed', pass: searchBlocked.length === 0,
-      detail: (searchBlocked.length ? `robots.txt blocks ${searchBlocked.join(', ')}, so those assistants can't fetch the site for live answers` : 'No AI search crawler is blocked in robots.txt')
-        + (trainingBlocked.length ? `. Training opt-out: ${trainingBlocked.join(', ')} (doesn't affect search answers)` : ''),
-      data: { blocked: searchBlocked, optOut: trainingBlocked } },
+      detail: (searchBlocked.length ? `robots.txt blocks ${searchBlocked.join(', ')}, which can keep the site out of those assistants' search answers` : 'No AI search crawler is blocked in robots.txt')
+        + (fetchBlocked.length ? `. Also blocks ${fetchBlocked.join(', ')} (user-requested visits, no effect on the score)` : '')
+        + (trainingBlocked.length ? `. Training opt-out: ${trainingBlocked.join(', ')} (no effect on search answers or the score)` : ''),
+      data: { blocked: searchBlocked, fetchBlocked, optOut: trainingBlocked } },
     { id: 'ssr', weight: 16, label: 'Readable without JavaScript', pass: words >= 250,
       detail: `${words} words visible in raw HTML${words < 250 ? ' — AI crawlers mostly do not run JavaScript' : ''}`, data: { words } },
     { id: 'schema', weight: 14, label: 'Structured data (schema.org)', pass: hasOrgSchema,
@@ -248,6 +253,7 @@ if (cmd === 'audit') {
   out({
     ok: true,
     searchBlocked: blocked.filter((b) => b.role === 'search').map(label),
+    fetchBlocked: blocked.filter((b) => b.role === 'fetch').map(label),
     trainingOptOut: blocked.filter((b) => b.role === 'training').map(label),
     allowed: AI_BOTS.filter((b) => !blocked.includes(b)).map((b) => b.ua),
   });

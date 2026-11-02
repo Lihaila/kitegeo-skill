@@ -17,7 +17,7 @@ Two skills for Claude Code, Codex, Cursor, Gemini CLI or any agent that supports
 ## kitegeo (free)
 
 Give it your website. It runs the same 11-point AI-readiness audit as KiteGEO:
-- AI search crawlers allowed in robots.txt (OAI-SearchBot, ChatGPT-User, Claude-SearchBot, PerplexityBot). Blocking training-only crawlers (GPTBot, ClaudeBot, Google-Extended, Applebot-Extended, CCBot) is reported as an opt-out and costs no points
+- AI search crawlers allowed in robots.txt (OAI-SearchBot, Claude-SearchBot, PerplexityBot). Blocking training crawlers (GPTBot, ClaudeBot, Google-Extended, Applebot-Extended, CCBot) is reported as an opt-out and costs no points. Blocking ChatGPT-User, which only makes visits a user asked for, is reported as a note and costs no points either
 - Text readable without JavaScript
 - schema.org structured data
 - llms.txt
