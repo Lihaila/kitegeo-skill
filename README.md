@@ -11,6 +11,7 @@ Two skills for Claude Code, Codex, Cursor, Gemini CLI or any agent that supports
 | What AI assistants actually say about you (ChatGPT and Grok; DeepSeek and Qwen for Chinese) | – | ✓ graded answers, mention rate, share of voice |
 | Competitors the AIs name instead, sources they cite | – | ✓ |
 | Weekly tracking | – | ✓ Pro and Agency plans |
+| Publishing toolkit: sites and forum threads AI cites, drafted articles and answers, one-click posting | – | ✓ any paid plan |
 | Cost | Free, runs on your machine | Free to install; uses your KiteGEO account (free checks, then a Full Report or plan) |
 | Needs | Nothing | A KiteGEO account and API key |
 
@@ -43,6 +44,7 @@ Runs the real KiteGEO from your agent. It asks every assistant real buyer questi
 - **Free checks:** 5 questions × every assistant, a few per day.
 - **Full Report** (one-time, bought on the report's web page; see [pricing](https://lihaila.com/geo/en/pricing)): 20 questions, memory and live search, every answer, all competitors, cited sources and an action plan with ready-to-paste fixes. The skill can fetch and apply that plan.
 - **Pro and Agency:** weekly tracking with a score trend.
+- **Publishing toolkit** (any paid plan): finds the free sites and forum threads (Reddit, Quora, Zhihu…) AI assistants cite for your brand's category, drafts honest articles from your action plan and answers to those threads, publishes to sites you've connected on the website (dev.to, Hashnode, Medium, WordPress…), and shows whether AI starts citing them. Your agent always asks before publishing, and forum answers are posted by you, from your own account.
 
 Payment always happens on the website through Stripe. It needs an agent with network access; the claude.ai sandbox may block calls to outside servers.
 
@@ -86,6 +88,7 @@ Both skills need Node 18 or later for their scripts.
 is example.com ready for AI search? fix what's wrong
 write an llms.txt and organization schema for my site
 does ChatGPT recommend us when people ask for the best project management tool for agencies?   # kitegeo-pro
+which Reddit and Quora threads should we answer this week, and draft the answers   # kitegeo-pro
 ```
 
 ## License

@@ -1,6 +1,6 @@
 ---
 name: kitegeo-pro
-description: Run KiteGEO (lihaila.com/geo) from your AI agent. It checks whether AI assistants (ChatGPT and Grok; DeepSeek and Qwen for Chinese) recommend a brand when buyers ask, which competitors they name instead, how they describe it, and what to fix. It runs free checks, reads Full Reports and action plans the user has bought, and tracks brands weekly, all on the user's KiteGEO account through an API key. Use it whenever the user has a KiteGEO account or key, mentions KiteGEO Pro, or asks whether AI assistants recommend their brand, their AI visibility or share of voice, or for a GEO report, even if they don't say "KiteGEO".
+description: Run KiteGEO (lihaila.com/geo) from your AI agent. It checks whether AI assistants (ChatGPT and Grok; DeepSeek and Qwen for Chinese) recommend a brand when buyers ask, which competitors they name instead, how they describe it, and what to fix. It runs free checks, reads Full Reports and action plans the user has bought, tracks brands weekly, and uses the publishing toolkit (finds the sites and forum threads AI cites, drafts articles and answers, publishes to connected sites, shows whether AI starts citing them), all on the user's KiteGEO account through an API key. Use it whenever the user has a KiteGEO account or key, mentions KiteGEO Pro, or asks whether AI assistants recommend their brand, their AI visibility or share of voice, or for a GEO report, even if they don't say "KiteGEO".
 ---
 
 # KiteGEO Pro
@@ -69,6 +69,19 @@ This only works on a Full Report. Present the plan's fixes as ready-to-paste fil
 - `track --scan <id>` adds the brand. Weekly scans then run automatically.
 - `rescan --project <id>` runs a scan now. That's limited to once a day.
 - To show trends, use `me`: the score history and the latest scan id are under `trackedBrands`.
+
+## Publishing toolkit (any paid plan)
+
+Measuring is half of GEO; the other half is being written about where AI assistants read. The toolkit finds those places for each brand every week and helps publish there.
+
+- `toolkit` shows everything for a brand: the sites (which are selected, which post in one click, how often AI cited each), action-plan **briefs**, **forum threads** that ask the questions the brand loses, published **articles**, and `isItWorking` (mention rate before publishing vs. now, and how often AI cited the user's posts). Agencies pass `--brand <key>` (keys are in `brands`); operators add `--as <owner id>`.
+- `draft --brief <n>` writes an article from brief n. Go through it with the user: check every fact and fill every `[placeholder]`. Save the final text to a file.
+- `publish --title "…" --file article.md [--sites a.com,b.com]` posts it. Sites with a connected account go live at once; the others come back under `toPostByHand` for the user (the website's Articles tab has "Copy & open"). Accounts are connected on the website only (`connectAccountsAt`).
+- `answer --thread <id>` drafts a reply to a thread; `answered --thread <id> --url <link>` records it once the user has posted it.
+
+**Before you publish, show the user the final title, text and site list, and wait for a clear yes.** Publishing is public and can't be taken back. Never publish the same text twice, and never to sites the user didn't choose.
+
+**You never post on forums (Reddit, Quora, Zhihu…).** Give the user the answer and the thread link; they post it from their own account, keeping the disclosure line. Communities ban automated and undisclosed promotion, and it would hurt the brand.
 
 ## Rules
 

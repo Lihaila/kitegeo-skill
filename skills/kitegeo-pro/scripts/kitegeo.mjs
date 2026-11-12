@@ -12,6 +12,16 @@
 //   node kitegeo.mjs track --scan <id>             track the brand weekly (Pro / Agency plans)
 //   node kitegeo.mjs rescan --project <id>         re-scan a tracked brand now
 //
+// Publishing toolkit (any paid plan; add --brand <key> for another brand, --as <owner id> for an agency):
+//   node kitegeo.mjs toolkit                        sites, briefs, threads to answer, articles, "is it working?"
+//   node kitegeo.mjs find                           search for new sites and threads now (once a day)
+//   node kitegeo.mjs draft --brief <n>              draft an article from action-plan brief n
+//   node kitegeo.mjs publish --title "…" --file article.md [--sites a.com,b.com] [--tags "a,b"] [--canonical <url>]
+//                                                   post to the sites (default: the selected ones); API sites go live now
+//   node kitegeo.mjs posted --post <id> --url <link>   record where a by-hand post went live (--retry to retry a failed one)
+//   node kitegeo.mjs answer --thread <id>           draft an answer to a forum thread
+//   node kitegeo.mjs answered --thread <id> [--url <link>] | dismiss --thread <id>
+//
 // q.json: a JSON array of questions, as strings or {"q": "...", "branded": false}.
 // Output is JSON on stdout; progress goes to stderr. Exit codes: 0 ok, 1 error, 2 needs action
 // (no key, free checks used up, report not bought, plan needed): the JSON's "action" says what to do.
@@ -172,6 +182,73 @@ switch (cmd) {
     const r = await getJSON(`projects/${need(a.project, 'project')}/rescan`, { method: 'POST' });
     out({ ok: true, scanId: r.scanId, next: `node kitegeo.mjs report --scan ${r.scanId} --wait` });
   }
+  // ---- Publishing toolkit (paid plans). --brand <key> picks the brand (default: the main one);
+  //      --as <owner id> works in an agency's toolkit as one of its operators.
+  case 'toolkit': {
+    const t = await toolkit();
+    const open = t.threads.filter((x) => x.status !== 'answered');
+    out({
+      ok: true, brand: t.brand, brands: t.brands, toolkitUrl: `${BASE}/en/publish`,
+      siteSearch: t.discovery,
+      sites: t.sites.map((s) => ({ domain: s.domain, name: s.name, selected: s.selected, oneClick: s.connected, lang: s.lang, citedByAI: s.cites, inSearch: s.hits })),
+      connectAccountsAt: `${BASE}/en/publish/accounts`,
+      briefs: t.briefs.map((b, i) => ({ n: i + 1, title: b.title, question: b.target_question })),
+      threadsToAnswer: open.map((x) => ({ id: x.id, site: x.site, title: x.title, url: x.url, question: x.question, hasDraft: !!x.answer })),
+      articles: t.articles.filter((x) => x.brand === t.brand).slice(0, 20).map((x) => ({ id: x.id, title: x.title, createdAt: new Date(x.createdAt).toISOString().slice(0, 10), by: x.by,
+        posts: x.posts.map((p) => ({ id: p.id, site: p.domain, status: p.status, url: p.url, citedByAI: p.cited || 0, error: p.error || undefined })) })),
+      isItWorking: t.impact,
+    });
+  }
+  case 'find': {
+    const t = await toolkit('publish/discover', { method: 'POST' });
+    out({ ok: true, siteSearch: t.discovery, note: 'Runs in the background (about a minute). Then run: node kitegeo.mjs toolkit' });
+  }
+  case 'draft': {
+    const t = await toolkit();
+    const b = t.briefs[Number(need(a.brief, 'brief')) - 1];
+    if (!b) out({ ok: false, error: `No brief ${a.brief}. "toolkit" lists them (${t.briefs.length}).` }, 1);
+    process.stderr.write('[kitegeo] writing the draft (about a minute)…\n');
+    const d = await getJSON('publish/draft', { method: 'POST', body: { ...ws(), scanId: b.scanId, title: b.title } });
+    out({ ok: true, title: d.title, tags: d.tags, body: d.body, note: 'A draft: check the facts and fill in every [placeholder] with the user before publishing.' });
+  }
+  case 'publish': {
+    const body = fs.readFileSync(need(a.file, 'file'), 'utf8');
+    const t = await toolkit();
+    const domains = a.sites && a.sites !== true ? String(a.sites).split(',').map((x) => x.trim()) : t.sites.filter((s) => s.selected).map((s) => s.domain);
+    const r = await getJSON('publish/articles', { method: 'POST', body: { ...ws(), title: need(a.title, 'title'), body, tags: a.tags === true ? '' : a.tags || '', canonicalUrl: a.canonical || null, domains } });
+    const art = r.articles.find((x) => x.id === r.articleId);
+    out({
+      ok: true, articleId: r.articleId,
+      live: art.posts.filter((p) => p.status === 'posted').map((p) => ({ site: p.domain, url: p.url })),
+      failed: art.posts.filter((p) => p.status === 'error').map((p) => ({ postId: p.id, site: p.domain, error: p.error })),
+      toPostByHand: art.posts.filter((p) => p.status === 'manual').map((p) => ({ postId: p.id, site: p.domain, editor: r.sites.find((s) => s.domain === p.domain)?.submitUrl })),
+      handOff: `Sites without an API are posted by the user: ${BASE}/en/publish/articles ("Copy & open"). Afterwards: node kitegeo.mjs posted --post <postId> --url <link>`,
+    });
+  }
+  case 'posted': {
+    await getJSON(`publish/posts/${need(a.post, 'post')}`, { method: 'POST', body: { ...ws(), ...(a.retry ? { retry: true } : { url: need(a.url, 'url') }) } });
+    out({ ok: true });
+  }
+  case 'answer': {
+    process.stderr.write('[kitegeo] drafting the answer…\n');
+    const t = await getJSON(`publish/threads/${need(a.thread, 'thread')}/draft`, { method: 'POST', body: ws() });
+    const th = t.threads.find((x) => x.id === a.thread);
+    out({ ok: true, thread: th.url, title: th.title, answer: th.answer,
+      note: 'The user posts this from their own account (forums ban automated posting), keeping the disclosure line. Then: node kitegeo.mjs answered --thread <id> --url <link>' });
+  }
+  case 'answered':
+  case 'dismiss': {
+    await getJSON(`publish/threads/${need(a.thread, 'thread')}`, { method: 'POST', body: { ...ws(), status: cmd === 'answered' ? 'answered' : 'dismissed', url: a.url === true ? '' : a.url || '' } });
+    out({ ok: true });
+  }
   default:
-    out({ ok: false, error: 'Commands: login <key> | me | prepare --site … | run --scan … | report --scan … [--wait] | plan --scan … [--wait] | track --scan … | rescan --project …' }, 1);
+    out({ ok: false, error: 'Commands: login <key> | me | prepare --site … | run --scan … | report --scan … [--wait] | plan --scan … [--wait] | track --scan … | rescan --project … | toolkit | find | draft --brief <n> | publish --title … --file … [--sites a,b] | posted --post … --url … | answer --thread … | answered --thread … [--url …] | dismiss --thread …' }, 1);
+}
+
+// Brand / agency workspace for toolkit calls.
+function ws() { return { brand: a.brand && a.brand !== true ? String(a.brand) : '', as: a.as && a.as !== true ? String(a.as) : '' }; }
+async function toolkit(p = 'publish', opts = {}) {
+  if (opts.method) return getJSON(p, { ...opts, body: { ...ws(), ...(opts.body || {}) } });
+  const q = new URLSearchParams(Object.entries(ws()).filter(([, v]) => v)).toString();
+  return getJSON(q ? `${p}?${q}` : p);
 }

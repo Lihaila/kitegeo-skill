@@ -1,7 +1,7 @@
 {
   "name": "kitegeo",
-  "version": "1.0.6",
-  "description": "Check and fix how AI assistants see your brand. kitegeo: free, local AI-readiness audit with ready-to-paste fixes. kitegeo-pro: runs KiteGEO (lihaila.com/geo) on your account for AI-visibility checks, Full Reports, action plans and weekly tracking.",
+  "version": "1.0.7",
+  "description": "Check and fix how AI assistants see your brand. kitegeo: free, local AI-readiness audit with ready-to-paste fixes. kitegeo-pro: runs KiteGEO (lihaila.com/geo) on your account for AI-visibility checks, Full Reports, action plans, weekly tracking and the publishing toolkit (sites and forum threads AI cites, drafted articles and answers, one-click posting to connected sites).",
   "author": {
     "name": "Lihai La",
     "url": "https://lihaila.com"
