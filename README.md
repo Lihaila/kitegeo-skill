@@ -44,7 +44,7 @@ Runs the real KiteGEO from your agent. It asks every assistant real buyer questi
 - **Free checks:** 5 questions × every assistant, a few per day.
 - **Full Report** (one-time, bought on the report's web page; see [pricing](https://lihaila.com/geo/en/pricing)): 20 questions, memory and live search, every answer, all competitors, cited sources and an action plan with ready-to-paste fixes. The skill can fetch and apply that plan.
 - **Pro and Agency:** weekly tracking with a score trend.
-- **Publishing toolkit** (any paid plan): finds the free sites and forum threads (Reddit, Quora, Zhihu…) AI assistants cite for your brand's category, drafts honest articles from your action plan and answers to those threads, publishes to sites you've connected on the website (dev.to, Hashnode, Medium, WordPress…), and shows whether AI starts citing them. Your agent always asks before publishing, and forum answers are posted by you, from your own account.
+- **Publishing toolkit** (any paid plan): finds the free sites and forum threads (Reddit, Quora, Zhihu…) AI assistants cite for your brand's category, drafts honest articles from your action plan and answers to those threads, publishes to sites you've connected on the website (such as dev.to and WordPress), and shows whether AI starts citing them. Your agent always asks before publishing, and forum answers are posted by you, from your own account.
 
 Payment always happens on the website through Stripe. It needs an agent with network access; the claude.ai sandbox may block calls to outside servers.
 
